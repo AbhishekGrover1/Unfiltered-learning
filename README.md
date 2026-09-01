@@ -99,33 +99,6 @@ All of it counts.
 
 ---
 
-## 🗂️ Repository Structure
-
-```text
-learning-in-public/
-│
-├── mistakes/
-│   └── things-that-broke.md
-│
-├── experiments/
-│   └── random-ideas/
-│
-├── practice/
-│   ├── python/
-│   ├── machine-learning/
-│   └── data-science/
-│
-├── wins/
-│   └── things-that-finally-worked.md
-│
-├── notes/
-│   └── things-i-learned.md
-│
-└── README.md
-```
-
----
-
 ## 📈 The Goal
 
 Not to make this repository perfect.
