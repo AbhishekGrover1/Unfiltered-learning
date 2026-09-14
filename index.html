@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigBasket AI Recommender</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f7f6; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+        .container { 
+            background-color: white; 
+            padding: 40px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
+            width: 100%; 
+            max-width: 500px; 
+            text-align: center; 
+        }
+        h1 { color: #2c3e50; font-size: 24px; margin-bottom: 25px; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input[type="text"] { 
+            padding: 12px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            font-size: 16px; 
+        }
+        button { 
+            background-color: #84c225; /* BigBasket Green */
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold;
+            transition: 0.3s; 
+        }
+        button:hover { background-color: #6a9b1c; }
+        .results-container { margin-top: 30px; text-align: left; }
+        .recommendation-card { 
+            background: #fdfdfd; 
+            border-left: 5px solid #84c225; 
+            padding: 15px; 
+            margin-bottom: 12px; 
+            border-radius: 4px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+        }
+        .product-name { font-weight: bold; color: #333; margin-bottom: 5px; }
+        .product-price { color: #e74c3c; font-weight: bold; }
+        .error { color: #e74c3c; font-weight: bold; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Product Recommender</h1>
+        <form id="recommendation-form">
+            <input type="text" id="product_name" name="product_name" placeholder="e.g., Garlic Oil - Vegetarian Capsule 500 mg" required>
+            <button type="submit">Find Similar Products</button>
+        </form>
+        <div class="results-container" id="results"></div>
+    </div>
+
+    <script>
+        document.getElementById('recommendation-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const productName = document.getElementById('product_name').value;
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p style="text-align:center; color:#666;"><i>Searching for similar items...</i></p>';
+
+            try {
+                const response = await fetch('/recommend', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ 'product_name': productName })
+                });
+                const data = await response.json();
+
+                if (data.error) {
+                    resultsDiv.innerHTML = `<p class="error">${data.error}</p>`;
+                } else {
+                    resultsDiv.innerHTML = '';
+                    data.recommendations.forEach(item => {
+                        resultsDiv.innerHTML += `
+                            <div class="recommendation-card">
+                                <div class="product-name">${item.product}</div>
+                                <div class="product-price">₹${item.sale_price}</div>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (err) {
+                resultsDiv.innerHTML = `<p class="error">An error occurred connecting to the model.</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
