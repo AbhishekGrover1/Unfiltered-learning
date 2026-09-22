@@ -12,7 +12,7 @@
 
 <br>
 
-### `learning-in-public`
+### `Unfiltered learning `
 
 **A raw, unfiltered record of my journey in AI/ML and software engineering.**
 
